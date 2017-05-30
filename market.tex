@@ -1,0 +1,114 @@
+\section{Market-level Optimization}\label{section:market}
+
+The original design of \Cyclus required some mechanism to match the consumer
+requests with supplier offers, based on both their quantity and quality
+(e.g. isotopic composition).
+
+
+This section describes the capability that allows \Cyclus to match consumer
+requests with supplier offers while consistent with the fundamental goals of
+the \Cyclus framework.  In particular, this capability must support the
+following.
+
+\vspace{1em}
+\noindent\textbf{Flexibility}: In order to support a maximum level of
+flexibility in \Cyclus, each agent must operate as a \textit{black box}, with
+no assumed knowledge of the capabilities or current state of other agents.
+This permits individual facilities to be represented by plugins that can be
+swapped individually without imposing restrictions on other agents in the
+system.  The market clearing mechanism must be able to accept any request for
+resources, regardless of its ability to be satisfied by the system.
+
+\vspace{1em}
+\noindent\textbf{Fungibility}: Since different fissile nuclides can fill
+similar roles in the fuel cycle, resource offers may differ in composition but
+still satisfy the needs of the consumer.  The market clearing mechanism must
+be able to accept any offer of resources, without judgement on whether or not
+it meets the goals of the corresponding request.
+
+\vspace{1em}
+\noindent\textbf{Agency}: Given the prior two characteristics, the final
+ability to determine the details of a specific request, a specific offer, or
+which offer is the most suitable match to a specific request must rest solely
+in the hands of the facilities making those requests and offers.  The market
+clearing mechanism may not impose any problem-wide value judgement on the
+transactions.
+\vspace{1em}
+
+A market clearing mechanism that satisfies these high level requirements,
+known as the \gls{DRE}, was designed and implemented.  \ref{subsection:dre}
+first discusses the conceptual design of the \gls{DRE}, followed by a formal
+definition of this system as a mixed-integer linear program to solve a
+modified network flow problem.  Different solvers were studied to assess the
+trade-off between accuracy and efficiency.  A number of sample problems are
+presented to demonstrate the capability of the \gls{DRE}.
+
+Although the \gls{DRE} provides the necessary components for market clearing
+in \Cyclus, it does not lead to the most efficient results.  
+
+In this \gls{DRE} design, consumers issue requests with no \textit{a
+  priori} certainty that there will be a supplier that will be physically able
+to satisfy that request.  A user will want to ensure that other agents exist
+in the simulation that are able to supply their consumers, but the developer
+of the agent plugin does not have such restrictions.
+
+
+
+
+
+While a simulation in which no consumer gets bids from
+a supplier is not interesting, occasional failure of supply is an interesting
+result often sought in studying fuel cycle transitions.
+
+
+  \Cyclus is designed to support new agents as runtime plugins To support the plugin architecture of \Cyclus, there must
+  be no requirement for \textit{a priori} knowledge of possible trading
+  relationships.
+
+
+
+
+
+
+In section 
+
+In secction \ref{subsection:callback}, the introduction of objective function
+callbacks is described as a mechanism to increase the overall efficiency of
+the system by allowing suppliers to better match the needs of their consumers.
+
+\subsection{Dynamic Resource Exchange}\label{subsection:dre}
+
+\subsubsection{Conceptual Design}
+
+At the conceptual level, the \gls{DRE} implements the following communication
+cycle at each time step in a \Cyclus simulation:
+\begin{enumerate}
+\item All consumers broadcast their requests to all suppliers.  Each request
+  describes the desired quantity and quality (isotopic composition).
+\item Suppliers respond to each consumer request with an offer to supply
+  material.  Each supplier has the agency to decide whether or not to respond,
+  and if so, how to respond.  Each offer describes an available quantity and
+  quality.
+\item Consumers use their own valuation process to rank the offers using the
+  notion of preference.
+\item All preferences are collected to be solved by a system that maximizes
+  the total preference in the system.
+\item The solution identifies specific resource trades that are then carried
+  out among the facilities/agents.
+\end{enumerate}
+
+This conceptual design is derived from a need to support the following \Cyclus
+design goals.
+
+
+
+
+\subsubsection{Mathematical Formulation}
+\subsubsection{Solution Engines}
+\subsubsection{Demonstration Problems}
+\subsection{Objective Function Callbacks}\label{subsection:callback}
+
+\subsubsection{Motivation}
+\subsubsection{Implementation}
+\subsubsection{Demonstration Problem}
+
