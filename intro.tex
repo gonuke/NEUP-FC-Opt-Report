@@ -2,9 +2,33 @@
 
 The goal of this project was to introduce optimization capabilities into the
 \Cyclus{} fuel cycle simulator at two different levels of the simulation
-capability.
+capability.  
 
-\subsection{\Cyclus Fundamentals}
+\subsection{\Cyclus{} Fundamentals}
+
+\Cyclus{} is a nuclear fuel cycle simulation platform with a primary design
+goal of flexibility to accommodate future innovations in nuclear fuel cycles.
+This flexibility is achieved, primarily, through an agent-based paradigm in
+which different models for agent behavior can be introduced through runtime
+plugin modules.  The most important outcome of this paradigm is that new
+behaviors can be introduced without having to change the fundamental platform,
+thus allowing for better understanding of the impacts of those new behaviors.
+Such new behaviors can represent different levels of fidelity for modeling
+similar facilities, or entirely novel facilities that require different
+modeling options.
+
+A \Cyclus{} simulation consists of a deployment plan for a series of
+facilities, possibly over many decades, with each facility represented by a
+particular behavior model.  Each facility has a set of commodities that it
+consumes and/or supplies, and a market for each commodity exists to facilitate
+the trade of those commodities.  Commodities are traded in discrete quanta,
+each of which has a specific quantitiy (often measured in mass) and a specific
+quality (e.g. isotopic composition).  At each time step, consumers issue
+requests for resources while suppliers issue offers of resources. A market
+model uses some mechanism to determine which requests will be matched with
+which offers, and resources are exchanged among facilites.  A more complete
+description of the \Cyclus{} platform, including some of the work described
+here, can be found in \cite{ref:cyclus_fundamentals}.
 
 \subsection{Optimization Needs}
 
@@ -18,10 +42,10 @@ trades would take place.  While this did allow for market like behavior, it
 did not allow for different agents to value the same discrete quantum of
 material differently.  Market-level optimization was implemented in the form
 of the \gls{DRE} with the primary purpose of supporting agent-based valuation
-of indvidual resource bids, accounting for fungibility among isotopes within a
-particular commodity.  As will be seen, this encapsulation of the resource bid
-valuation entirely within each agent promotes the fundamental flexibility of
-\Cyclus.
+of indvidual resource bids, accounting for flexibility in the behavior of the
+facility and fungibility among isotopes within a particular commodity.  As
+will be seen, this encapsulation of the resource bid valuation entirely within
+each agent promotes the fundamental flexibility of \Cyclus.
 
 By itself, the consumer-centric \gls{DRE} left one gap in the efficient
 implementation of commodity markets: suppliers had no knowledge of how the
