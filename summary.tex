@@ -1,5 +1,87 @@
 \section{Summary}
 
+This project identified two primary goals related to the introduction of
+optimization capability into the \Cyclus{} fuel cycle simulation ecosystem:
+\begin{enumerate}
+\item optimization at the market-level for individual commodity trades at each time step, and 
+\item optimization at the system-level to identify the best deployment
+  histories over a fuel cycle transition.
+\end{enumerate}
+\noindent Both of these goals were successfully accomplished with minor variations from
+orignially proposed research plan.
+
+\subsection{Market-level Optimization}
+
+The mechanism for matching resource requests made by some facilities with
+resource offers made by other facilities was finalized and implemented as a
+variation of a classic network transportation problem.  Specific additions
+were made to account for the fungibility of some nuclear materials, the desire
+for exclusive supply arrangements, and the possibility for constraints that
+are functions of both resource quality and quantity.  This approach also
+preserves the important feature of retaining full agency within each facility
+for determining its preference among the offers that can satisfy its requests.
+
+The specific task of assessing different optimization algorithms was completed
+with a comprehensive comparison of a fast heuristic market matching algorithm
+with more rigorous linear programming algorithms provided by \gls{COIN-OR}.
+The heuristic matching algorithm was found to be sufficient in many cases,
+although it is not yet clear how to determine that it will be sufficient for
+any particular problem.  Although the total objective function value of
+different material flow solutions may vary, such variations do not always
+represent substantially different flows.
+
+The specific task of introducing objective function callbacks to allow
+suppliers to detremine what preference each consumer will assess for its
+offers, and therefore tailor the offers to maximize the likelihood of
+matching.  This feature both adds efficiency to the market mechanisms by
+improving the quality of individual offers and/or reducing the total number of
+offers necessary to reach an optimal solution.
+
+The single deviation from the orignial research plan was that realistic
+economic value functions were not implemented in place of preference.  While
+it is possible for each facility archetype to rely on realistic economic
+values to assess its preference for individual trades, insufficient certainty
+in economic models exists to justify incorporating this in specific facility
+archetypes being delivered formally as part of the \Cyclus{} ecosystem.
+
+\subsection{System-level Optimization}
+
+A system for seeking and identifying optimal deployment histories was
+developed based on black-box optimization techniques.  A PSwarm algorithm was
+found to be the most effective at converging on optimal deployment histories,
+following comparison with a variety of open source algorithms that satisfied
+the requirements for optimization of this kind of problem.  The formulation of
+the decision space was found to be important to improve the rate of
+convergence.  A master-worker paradigm was implemented to take advantage of
+high throughout and/or cloud computing resources necssary to accompish the
+$O(10^5)$ \Cyclus{} simulations necessary in this kind of optimization.
+
+The optimization system was demonstrated using the EG23 fuel cycle transition
+defined by the Fuel Cycle Options campaign.  While the FCO campaign relied on
+manual iteration to identify an optimum deployment history, the optimization
+system was able to automatically arrive at an equivalent deployment history.
+Allowing for some flexibility in the overall power constraint allowed the
+system to find a more optimal solution that completes the transition more
+quickly.
+
+One contribution beyond the original research plan was to use this
+optimization system to compare the impacts of different modeling choices,
+namely the difference between modeling indviidual facilities and fleets of
+facilities, and the difference between 1 month and 3 month time
+steps. \cite{rwc_fleet}
+
+One substantinal contribution beyond the original research plan was the
+adaptation of the optimization system for identifying hedging strategies in
+the face of possible disruptions to the planned fuel cycle transition.  A
+conceptual methodology was designed that relies on nested optimization, and
+implemented with an approximation to one level of optimization to reduce the
+overall computational burden to a reasonable level.
+
+
+
+
+
+
 %% 4. Provide a comparison of the actual accomplishments with the goals and
 %%    objectives of the project.
 

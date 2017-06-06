@@ -290,7 +290,7 @@ much larger than before.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\textwidth]{best-found-power.eps}
+    \includegraphics[width=0.75\textwidth]{best-found-power.eps}
     \caption[Power for best build schedule with $\pm10\%$ bounds]{ Both
       \gls{LWR} and total (\gls{SFR} and \gls{LWR}) generated power over time
       for the best deployment schedule found among all the primary
@@ -313,7 +313,7 @@ possible.  This allows the \gls{LWR}s to be phased out more quickly over all.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\textwidth]{best-known-power.eps}
+    \includegraphics[width=0.75\textwidth]{best-known-power.eps}
     \caption[Power for best build schedule with $\pm5\%$ bounds]{ Both
       \gls{LWR} and total (\gls{SFR} and \gls{LWR}) generated power over time
       for the best deployment schedule found by the PSwarm optimizer using
@@ -323,11 +323,191 @@ possible.  This allows the \gls{LWR}s to be phased out more quickly over all.
     \label{fig:exp1-bestknownpower}
 \end{figure}
 
-\subsection{Disruption Analysis}
+\subsection{Disruption Analysis and Hedging Strategies}
 \subsubsection{Motivation}
-\subsubsection{Problem Definition}
-\paragraph{Characteristics of disruption}
-\paragraph{Choice of objective function}
+
+When conducting transition analysis for nuclear fuel cycles, a fundamental
+assumption is that the transition will proceed in an orderly fashion from the
+current configuratioon until it is complete.  Transitions typically take over
+100 years to become complete, and often longer.  Societal motivations and
+needs are very likely to change over such time scale, probably leading to
+changes in course for nuclear fuel cycle transitions, calling into question
+this fundamental assumption.
+
+The work under this task builds upon the system-level optimization to study
+the response of the system to a disruption in the trajectory to a new fuel
+cycle concept.  Many types of disruption are possible, from small changes in
+the configuration of the systems being deployed during the transition, to
+large changes in policy that render some key systems no longer usable.  Over
+the time scales of interest, it is possible that there may be multiple
+disruptions.  It is not generally possible to predict when such disruptions
+will occur.
+
+Nuclear fuel cycle transitions are often assessed according to a set of
+performance metrics, where the best transition is determined by optimizing
+against one or more of these metrics.  In the face of disruption, it may be
+more valuable to identify a transition that will be impacted the least by such
+a disruption.  Such a transition may not be optimal in the event that no
+disruption occurs, but can have the highest likelihood of a near optimal
+performance under the presumption of disruption.  The optimization system for
+\Cyclus{} can be nested to identify such transitions, known as hedging
+strategies since they hedge agains the risk of disruptions.
+
+\subsubsection{Methodology}
+
+The previous section showed how to determine the optimum deployment history
+for a given objective function and given scenario description.  Whie the
+addition of a disruption changes the scenario, it is still possible to
+identify an optimum for this new scenario.  However, the decision space of
+such an optimization problem must be slightly different.  First, an optimal
+deployment history, $D$, must be determined for a transition in which there is
+no disruption.  All histories must start on this path as they have no
+\textit{a priori} knowledge if or when a disruption will occur.  After the
+introduction of a disruption at time, $t_d$, another optimization anlaysis
+occurs to find the optimal deployment history, $D'$, that may only differ from
+$D$ in the time period after the disruption.  That is, the decision space for
+this optimization problem does not include the decisions made prior to $t_d$.
+We define $R^*(D,t_d)$ as the optimum deployment history that begins as
+history $D$ but suffers a disruption at time $t_d$, and $S^*(D,t_d) =
+O[R^*(D,t_d),t_d]$ as the value of the objective function, $O(D)$, when
+deployment history $R^*(D,t_d)$ is evaluated in a scenario in which a
+disruption occurs at time $t_d$.
+
+Since the actual time of disruption is not known, we must assume a probability
+distribution, $p(t_d)$, so that is finally possible to determine the hedging
+score for a given initial deployment history, $D$, as:
+
+$$H(D) \equiv \int_0^\infty S^*(D,t_d) \cdot p(t_d) dt_d,$$
+
+\noindent which can be approximated as:
+
+$$H(D) \approx \sum_{i=0}^m S^*(D,t_i) \cdot p(t_i) \Delta t.$$ \label{eqn:Happrox}
+
+
+Finally, this can be used as an objective function itself, to seak the initial
+deployment strategy, $D$, that results in the optimum value of $H(D)$.
+
+
 \subsubsection{Implementation}
-\paragraph{Avoiding nested optimization}
-\paragraph{}
+
+Using this conceptual methodology directly requires many levels of optimization:
+\begin{enumerate}
+\item $O(10^5)$ evaluations of objective function $H(D)$
+\item For each evaluation of $H(D)$, $O(10)$ evaluations of $S^*(D,t_d)$, and
+\item For each evaluation of $S^*(D,t_d)$, $O(10^5)$ evaluations of objective
+  function $O(D)$ in order to find $R^*(D,t_d)$.
+\end{enumerate}
+
+Given the limited ability to parallelize across the PSwarm algorithm (or any
+black-box algorithm), this results in a currently unrealistic amount of
+computational effort, even using the high throughput master-worker paradigm.
+One way to reduce the effort is to introduce an approximation for
+$S^*(D,t_d)$.  While the choice of such an approximation is an interesting
+topic itself, for the purpose of demonstrating the overall capability, we
+chose the approximation:
+
+$$S^*(D,t_d) \approx \frac{t_d}{t_{end}} O(D,t_d) + \frac{t_{end}-t_d}{t_{end}} O^*(t_d),$$
+
+\noindent where $O*(t_d)$ is the value of the objective function for a the
+deployment history that is optimum for a disruption at time $t_d$.  For a
+discrete set of disruption times identified in Eqn \ref{eqn:Happrox}, each
+$O^*(t_d)$ can be evaluated once \textit{a priori}.  Each subsequent
+approximation of $S^*(D,t_d)$ requires only a single evaluation of the
+objective function.
+
+
+\subsubsection{Problem Definition}
+
+A variation of the EG23 transition analysis was used to demonstrate this
+capability.  The presence of disruptions is likely to increase the chance that
+reactors are idle after their deployment, so the objective function is
+modified to introduce a penalty for such circumstances.
+
+\begin{equation}
+    O_{sim} = \frac{\sum\limits_{t \in sim} E_{t,\;LWR}}{\sum\limits_{t \in sim} E_{t,\;tot}}
+              \cdot
+              \frac{\sum\limits_{t \in sim} C_{t,\;tot}}{\sum\limits_{t \in sim} E_{t,\;tot}}
+    \label{eq:exp3-obj}
+\end{equation}
+
+In this case, $C_{t,tot}$ is the total installed capacity; the lower the capacity factor, the higher the objective function.
+
+\subsubsection{Disruption Details}
+
+In order to focus on the methodology, a simple disruption was introduced in
+the form of a 33\% reduction in the Pu available for fabrication of \gls{SFR}
+fuel.  This could be interpretted as an approximation to a number of different
+realistic scenarios, including a policy decision to shift away from breeders
+and towards burners.
+
+It is also necessary to introduce a probability distribution for the when the
+disruption occurs.  In this case, a gamma distribution is chosen:
+
+\begin{equation}
+    p(t_d) = \frac{600}{\Gamma(1.5)\cdot 2^{1.5}} \left(\frac{t}{600}\right)^{0.5} \mathlarger{e^{\frac{\mathlarger{\mathsmaller{-}t}}{600 \cdot 2}}}
+    \label{eq:gamma-dist}
+\end{equation}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{gamma-dist.eps}
+    \caption[Disruption Probability Distribution]{
+        The disruption probability density function is a scaled gamma
+        distribution (i.e. Equation \ref{eq:gamma-dist}).  Note that the
+        simulation duration is 2,400 months; times after month 2,400 are
+        beyond the planning horizon and represent no disruption occurring.
+    }
+    \label{fig:exp3-gamma-dist}
+\end{figure}
+
+
+\subsubsection{Results}
+
+This problem was used to demonsrate the hedging strategy analysis.
+Intermediate results were used to assess the impact of the assumptions
+inherent in this analysis and are presented in \cite{rwc_dissertation}.  To
+assess the quality of the best hedging deployment history identified by this
+methodology, it is useful to compare its performance to other possible
+deployment histories.  In addition to comparing the value of $H(D)$ for
+different deployment histories, it is valuable to consider the probability
+distribution functions (PDFs) of objective function values, over a large set
+of randomly sampled disruption times.
+
+
+Figure \ref{fig:exp3-outcome-dists} shows the PDFs for the hedging strategy
+compared to 6 other deployment histories, specifically the best deployment
+strategies for 6 different fixed/known disruption times.  It is apparent that
+a number of deployment histories have lower objective function values in their
+best case, that the best case for the hedging strategy, but may also have a
+higher prevelance of higher objective function values.
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{dists.eps}
+    \caption[Experiment 3: Outcome Distributions]{
+        The best deployment schedules from select disruption times and the
+        hedging schedule were used in to sample disruption times from the PDF.
+        Best achievable objectives were then collected and the outcome
+        frequency for each is shown.  Better hedging strategies shift more
+        outcomes to the left toward better values (e.g. hedge, disruption 10,
+        etc.).  The 26.1\% no-disruption probability causes a spike of
+        outcomes all at the left/lower edge of each distribution curve.
+        Because this obscures other data, the no-disruption outcomes are
+        omitted from the plot.
+    }
+    \label{fig:exp3-outcome-dists}
+\end{figure}
+
+
+\subsubsection{Summary}
+
+Because of the black-box nature of the \Cyclus optimization system, it was
+possible to extend it to a nested optimization system by changing the
+mechanism for evaluating the objective function.  In a typical scenario
+optimization, a single objective function evaluation is a single \Cyclus{}
+simulation with some post processing.  For the hedging analysis, using an
+approxiation at one layer of the nested optimization, a single objective
+function evaluation is $O(10)$ \Cyclus simulations that are combined into a
+single value.  This methodology was demonstrated using a poisitted disruption
+to the EG23 transition scenario, identifying a the best deployment history for
+minimizing the exposure to that disruption.
