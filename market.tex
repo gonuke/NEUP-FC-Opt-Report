@@ -47,8 +47,8 @@ definition of this system as a mixed-integer linear program to solve a
 modified network flow problem.  Different solvers were studied to assess the
 trade-off between accuracy and efficiency.  A number of sample problems are
 presented to demonstrate the capability of the \gls{DRE}.  A more
-comprehensive treatment of the \gls{DRE} can be found in \cite{dre_paper}
-and \cite{gidden_thesis}.  Although the \gls{DRE} provides the necessary
+comprehensive treatment of the \gls{DRE} can be found in \citeprod{dre_paper}
+and \citeprod{gidden_thesis}.  Although the \gls{DRE} provides the necessary
 components for market clearing in \Cyclus, it does not lead to the most
 computationally efficient results.  In particular, the \gls{DRE} does not
 provide a mechanism for suppliers to tailor their offers to the specific
@@ -78,7 +78,7 @@ cycle at each time step in a \Cyclus simulation:
   out among the facilities/agents.
 \end{enumerate}
 
-A the heart of the \gls{DRE} is a the \gls{MTP} \cite{even1975complexity}
+A the heart of the \gls{DRE} is a the \gls{MTP} \citeref{even1975complexity}
 which belongs to the network flow family of optimization problems. A network
 flow problem is represented by a graph, $G(N, A)$, comprises nodes $N$ and
 arcs $A$. If flow can occur between some node $i$ and some other node $j$,
@@ -171,7 +171,7 @@ features of the nuclear fuel cycle, including:
 \end{itemize}
 This allows the \gls{MTP} to be redefined into a more problem specific
 \gls{NFCTP} as shown in Equation \ref{eqs:NFCTP}.  A more detailed discussion
-of these details is available in ref \cite{dre_paper}.
+of these details is available in ref \citeprod{dre_paper}.
 
 \begin{subequations}\label{eqs:NFCTP}
   \begin{align}
@@ -251,7 +251,7 @@ receive no response to their request during that itme step.
 The formulation of this problem in a classical linear programming
 representation enables \Cyclus{} to draw on both the literature for this field
 and the various software libraries that exist to solve such problems.  The
-leading open source solution is the \gls{COIN-OR} project \cite{COINOR} that
+leading open source solution is the \gls{COIN-OR} project \citeref{COINOR} that
 provides robust implementation of standard algorithms for solving both linear
 programs and mixed integer linear programs.
 
@@ -269,7 +269,7 @@ optimal solution, by using a heuristic of matching the highest preference
 request with its highest preference bid, and so on until everything is
 matched, including matches with false consumers/suppliers.  These different
 solvers were tested to develop an understanding of their behavior in a number
-of configurations.\cite{gidden_thesis} In addition to the overal computational
+of configurations.\citeprod{gidden_thesis} In addition to the overal computational
 performance of the different solvers, there was also interest in understanding
 under what circumstances the solvers achieved similar solutions.  These
 results were measured as a function of the total number of requests and/or
@@ -291,7 +291,7 @@ same level of optimization.  It is noteworthy, however, that the difference in
 value of the objective function is not a perfect indicator of the differences
 in the flows achieved by this solution.  Very similar flows may have different
 objective function values.  A richer and more comprehensive analysis is
-offered in Ref. \cite{gidden_thesis}.
+offered in Ref. \citeprod{gidden_thesis}.
 
 %% include Gidden PhD figure 4.33 \label{fig:solver_comparison}
 
@@ -309,7 +309,7 @@ commodity rather than a combination of fuel types as is done in practice. A
 simulation time frame of 50 years is chosen with one-month time-steps
 (totaling 600 simulation time steps), sufficient to display all relevant
 effects. The nominal parameters of all common facilities in the simulation are
-shown in \cite{gidden_dre_2016}.
+shown in \citeprod{dre_paper}.
 
 The base case scenario is not process constrained (i.e., it is constrained only
 by the dynamics of Pu availability in the recycling stream). Reactors are
@@ -404,7 +404,7 @@ from recycled UOX) consumed is observed in the external scenario. This is due
 to a reduction in the available recycled UOX supply during periods of external
 MOX consumption. In short, for each reload of external MOX, the system loses a
 future amount of recyclable UOX.  A more complete discussion can be found in
-Ref \cite{dre_paper}.
+Ref \citeprod{dre_paper}.
 
 \begin{figure}
   \centering
