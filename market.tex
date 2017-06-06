@@ -426,6 +426,8 @@ Ref \cite{dre_paper}.
 
 \subsection{Objective Function Callbacks}\label{subsection:callback}
 
+\subsubsection{Motivation}
+
 As previously discussed, the basic implementation of the \gls{DRE} provides
 the ability for consumers to evaluate different resource offers, but does not
 provide the suppliers with any mechanism to judge how well those offers will
@@ -436,8 +438,10 @@ received by the consumer.  If the suppliers offers are poor matches, the
 consumers may operate below their ideal performance or even experience supply
 disruptions.  Three major types of remedy exist:
 \begin{enumerate}
-\item encourage supplier facilities to make many offers with different qualities/quantities,
-\item increase the information included in a request to enable the supplier to make informed choices, or
+\item encourage supplier facilities to make many offers with different
+  qualities/quantities,
+\item increase the information included in a request to enable the supplier to
+  make informed choices, or
 \item provide a mechanism for the supplier to query the consumer.
 \end{enumerate}
 
@@ -455,15 +459,75 @@ flexibility.  As each new piece of information is added to the request, all
 agents would need to implement algorithms that could use that information to
 guide their responses.  
 
-While it is theoretically possible to add ever-increasing
-information to the details in a request for resources, this is a poor software
-solution since it requires all the archetypes being developed in the community
-to be updated with each change.  A preferred solution is to extend the request
-once to include a function pointer that can be used by the supplier to query
-the consumer.
+This leaves the preferred solution of extending the request once to include a
+function pointer that can be used by the supplier to query the consumer, in
+which each consumer is free to respond to this query with as much complexity
+as they require.
 
 
-\subsubsection{Motivation}
 \subsubsection{Implementation}
+
+Two small changes were made to give suppliers more control over the nature of
+their offers and their interaction with the \gls{DRE}.  First, the contents of
+a bid were expanded to include the supplier's preference for each bid.  This
+information can then be used by consumers to impact their algorithm for
+determining the ultimate request-bid preference.  As with the consumer's
+ability to establish preference, the supplier is free to use any algorithm to
+establish this preference.
+
+The objective function callbacks have also been implemented, simply by
+extending the contents of a request to include a pointer to a fcuntion with a
+single argument of a single bid, and extending the interface with a function
+that will return that pointer.  Suppliers are free to query the callback
+function (or not) and implement any algorithm to use that information to amend
+their bids.
+
+Both of these changes require no changes to existing agent archetypes, unless
+they want to take advantage of the new functionality.  A default bid
+prefreence of 0 is assigned for all bids where it is not assigned explicitly,
+so that all methods to generate bids will continue to function with no
+changes.  Similarly, the callback functions are only queried if a supplier
+archetype chooses to do so.
+
+
 \subsubsection{Demonstration Problem}
 
+
+This capability was demonstrated with a storage facility archetype that
+determined its preference based in the specific decay heat of the offered
+resource.  When added to the simulation, the archetype was configured with a
+maximum specific decay heat and will never accept a material with a specific
+decay heat above that threshold.  In addition, it will prefer materials with a
+preference as high as possible below that threshold.
+
+This archetype was used to fill multiple storage roles in a simulation that
+also included a standard recipe reactor: wet storage with no maximum allowable
+specific decay heat, dry storage with a modest maximum allowable specific
+decay heat, and a geologic repository with a low maximum allowable specific
+decay heat.  In such a simulation, the reactor, wet storage and dry storage
+always offer their material to be taken by one of the other facilities.
+
+There are a number of more subtle benefits of this approach.  These materials
+can be offered in a single commodity market with no need to constrain the
+possible flows \textit{a priori}.  If material happens to remain in wet
+storage long enough that its decay heat drops sufficiently, its material can
+be sent directly to the geologic repository.  All storage facilities
+participate in the same market and only accept material that is suitable for
+their characteristics.  In addition, intermediate storage facilities can trade
+material based on its actual decay heat rather than its residence time.  Many
+fuel cycle models rely on storage facilities with minimum residence times to
+approximate the notion that spent-fuel transport and acceptance is typically
+limited by its decay heat (among other related characteristics).  In this
+case, the archetype can make decisions based on the operational characteristic
+that matters rather than an approximate surrogate.
+
+The preference function of the consumer always ensures that material only
+flowed when the decay heat is sufficiently low.  In the absence of objective
+function callbacks, however, the intermediate storage facilities would offer
+all the resources in their inventory during every time step.  This would
+result in many superfluous offers that exceeded the decay heat limits of the
+consumers.  By using a callback function to probe the preference of the
+receiving facility for each possible offer, it can avoid making offers that
+are not going to be accepted by the receiving facility.
+
+ 
