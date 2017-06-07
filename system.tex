@@ -5,7 +5,7 @@ simulations defined primarily by the deployment history of various facilities
 over time.  In some cases, users may manually alter those deployment histories
 to meet some objective, iterating until they find the best possible outcome.
 In fewer instances, that iteration has been automated to seek optimal
-solutions \citeref{hays}.  By modeling discrete facilities over 1 month time
+solutions (e.g. \citeref{hays}).  By modeling discrete facilities over 1 month time
 steps, \Cyclus{} offers many degrees of freedom for defining the deployment
 history of its facilities, underscoring the value in an automated optimization
 system.
@@ -36,11 +36,11 @@ This scenario starts with 100 \gls{LWR}s and follows an exponential growth of
   capacity is fixed, and reactor deployment history is to be optimized.  The
   goal is to complete the transition, defined by the decommissioning of the
   last \gls{LWR}, as quickly as possible.  More details of this transition are
-  available in \citeprod{rwc_fff}.
+  available in Ref. \citeprod{rwc_fff}.
 
 
   
-\subsection{Black Box Optimization}
+\subsection{Optimization Design, Implementation and Demonstration}
 
 \subsubsection{Requirements and Algorithm Options}
 Using a fuel cycle simulator as part of an optimization objective is a
@@ -60,16 +60,19 @@ challenging problem for several reasons:
   for a single iteration.
 \end{itemize}
 
-This kind of problem is often referred to as black-box optimization. Another
-challenge is desirability of the optimization process to be effective over
-many different simulation scenarios. There is no single, well-defined
-objective to be optimized.
+This kind of problem is often referred to as black-box\footnote{While this use
+  of ``black box'' is functionally different than the usage in Section
+  \ref{section:market}, it is based on the same notion that there is no ability to
+  have internal knowledge of the system.}  optimization. Another challenge is
+desirability of the optimization process to be effective over many different
+simulation scenarios. There is no single, well-defined objective to be
+optimized.
 
 There are several classes of algorithms for addressing block-box optimization
 of this nature:
 \begin{itemize}
 \item \textbf{Pattern Search} algorithms expand and contract their search over
-  the decision space, with convergence governed by the rates of expansion and
+  a discretized decision space, with convergence governed by the rates of expansion and
   contraction.
 \item \textbf{Swarm} algorithms follow the trajectories of a set of search
   points through the decision space, with the velocities of those points
@@ -93,13 +96,14 @@ necessary to define the decision space and objective function.
 Conceptually, the decision space is defined by the number of reactors of each
 variety being deployed at each time step, with the total capacity constrained
 to match the total electricity growth rate.  A naive implementation based on
-this conceptual problem results in unbounded decision variables bounded by
-explicit constraints.  Many black-box algorithms are challenged by such a
-decision space, resulting in evaluations of infeasible solutions (those
+this conceptual problem results in unbounded decision variables in a space
+bounded by explicit constraints.  Many black-box algorithms are challenged by
+such a decision space, resulting in evaluations of infeasible solutions (those
 outside the constraint) that are then penalized in the evaluation of the
 objective function because of they are outside the constraint.  It is
 therefore preferable to develop a formulation with a bounded decision space,
-in which the constraints are represented by the bounds of the decision space.
+in which the constraints are represented by the bounds of the decision
+variables.
 
 The decision space for one such formulation is defined by the fraction of
 capacity additions at each time step that will composed of each reactor type.
@@ -109,7 +113,7 @@ bounds for the next reactor type after each selection, the entire search space
 is accessible without violating the constraint.
 
 These fractions can be converted to the number of reactors as shown in
-Equation \ref{eqn:tranform-reactors}.
+Equation \ref{eqn:transform-reactors}.
 
 \begin{equation}
     N(t, r) =
@@ -136,7 +140,7 @@ not satisfied by the other reactor types.
 \subsubsection{Objective Function}
 
 Many possible objective functions can be used to assess fuel cycle
-transitions, and selecting objective functions is an area of stuy in its own
+transitions, and selecting objective functions is an area of study in its own
 right (in addition to defining them with sufficient certainty to be useful).
 The objective function was designed to drive toward a fast-reactor-only fuel
 cycle as quickly as possible while simultaneously discouraging/penalizing
@@ -162,7 +166,7 @@ allows the optimization to explore potentially interesting trade-offs related
 to expediting the transition.
 
 
-\paragraph{Master-worker implementation}
+\subsubsection{Master-worker implementation}
 
 As black box techniques, all of the optimization algorithm classes explored
 here rely on a large number of independent evaluations of the objective
@@ -224,11 +228,12 @@ with PSwarm being the best performer and DIRECT being the least effective.
         \hline                       
     \end{tabular}
     \captionsetup{justification=centering}
-    \caption[Experiment 1: summary of optimizer runs]{
+    \caption[Summary of optimizer performance]{
 
-        Experiment 1 summary results for all optimizer runs. The additional
+        Summary results for all optimizer runs. The additional
         \emph{PSwarm-biannual} run is identical to the other PSwarm runs
-        except it had bi-annual instead of annual deployments resulting in only 200 optimization variables. \\
+        except it had bi-annual instead of annual deployments resulting in
+        only 200 optimization variables. \\
         
         \hspace{\textwidth}
         
@@ -261,14 +266,14 @@ In addition to the runs for each optimizer described above, Table
 \ref{tab:exp1-summary} and Figure \ref{fig:exp1-converge} contain data from
 one additional run using the PSwarm optimizer with bi-annual deployments
 instead of annual deployments.  More detailed discussion of each result is
-available in \citeprod{rwc-dissertation}.  The PSwarm optimizer was selected as
+available in Ref. \citeprod{rwc-dissertation}.  The PSwarm optimizer was selected as
 the primary optimization algorithm for the \Cyclus optimization system.
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\textwidth]{converge.eps}
     \captionsetup{justification=centering}
-    \caption[Experiment 1: optimizer convergence curves]{Objective value convergence curves for all optimizer runs.}
+    \caption[Optimizer convergence curves]{Objective value convergence curves for all optimizer runs.}
     \label{fig:exp1-converge}
 \end{figure}
 
@@ -328,7 +333,7 @@ possible.  This allows the \gls{LWR}s to be phased out more quickly over all.
 
 When conducting transition analysis for nuclear fuel cycles, a fundamental
 assumption is that the transition will proceed in an orderly fashion from the
-current configuratioon until it is complete.  Transitions typically take over
+current configuration until it is complete.  Transitions typically take over
 100 years to become complete, and often longer.  Societal motivations and
 needs are very likely to change over such time scale, probably leading to
 changes in course for nuclear fuel cycle transitions, calling into question
@@ -356,22 +361,21 @@ strategies since they hedge agains the risk of disruptions.
 \subsubsection{Methodology}
 
 The previous section showed how to determine the optimum deployment history
-for a given objective function and given scenario description.  Whie the
+for a given objective function and given scenario description.  While the
 addition of a disruption changes the scenario, it is still possible to
 identify an optimum for this new scenario.  However, the decision space of
-such an optimization problem must be slightly different.  First, an optimal
-deployment history, $D$, must be determined for a transition in which there is
-no disruption.  All histories must start on this path as they have no
-\textit{a priori} knowledge if or when a disruption will occur.  After the
-introduction of a disruption at time, $t_d$, another optimization anlaysis
-occurs to find the optimal deployment history, $D'$, that may only differ from
-$D$ in the time period after the disruption.  That is, the decision space for
-this optimization problem does not include the decisions made prior to $t_d$.
-We define $R^*(D,t_d)$ as the optimum deployment history that begins as
-history $D$ but suffers a disruption at time $t_d$, and $S^*(D,t_d) =
-O[R^*(D,t_d),t_d]$ as the value of the objective function, $O(D)$, when
-deployment history $R^*(D,t_d)$ is evaluated in a scenario in which a
-disruption occurs at time $t_d$.
+such an optimization problem must be slightly different.  First, consider a
+candidate deployment history, $D$, that will be subject to a disruption. All
+histories must start on this path as they have no \textit{a priori} knowledge
+if or when a disruption will occur.  After the introduction of a disruption at
+time, $t_d$, an optimization anlaysis can occur to find the optimal deployment
+history, $D'$, that must only differ from $D$ in the time period after the
+disruption.  That is, the decision space for this optimization problem does
+not include the decisions made prior to $t_d$.  We define $R^*(D,t_d)$ as the
+optimum deployment history that begins as history $D$ but suffers a disruption
+at time $t_d$, and $S^*(D,t_d) = O[R^*(D,t_d),t_d]$ as the value of the
+objective function, $O(D)$, when deployment history $R^*(D,t_d)$ is evaluated
+in a scenario in which a disruption occurs at time $t_d$.
 
 Since the actual time of disruption is not known, we must assume a probability
 distribution, $p(t_d)$, so that is finally possible to determine the hedging
@@ -381,8 +385,9 @@ $$H(D) \equiv \int_0^\infty S^*(D,t_d) \cdot p(t_d) dt_d,$$
 
 \noindent which can be approximated as:
 
-$$H(D) \approx \sum_{i=0}^m S^*(D,t_i) \cdot p(t_i) \Delta t.$$ \label{eqn:Happrox}
-
+\begin{equation}
+  H(D) \approx \sum_{i=0}^m S^*(D,t_i) \cdot p(t_i) \Delta t. \label{eqn:Happrox}
+\end{equation}
 
 Finally, this can be used as an objective function itself, to seak the initial
 deployment strategy, $D$, that results in the optimum value of $H(D)$.
@@ -403,17 +408,17 @@ black-box algorithm), this results in a currently unrealistic amount of
 computational effort, even using the high throughput master-worker paradigm.
 One way to reduce the effort is to introduce an approximation for
 $S^*(D,t_d)$.  While the choice of such an approximation is an interesting
-topic itself, for the purpose of demonstrating the overall capability, we
-chose the approximation:
+research topic itself, for the purpose of demonstrating the overall
+capability, we chose the approximation:
 
 $$S^*(D,t_d) \approx \frac{t_d}{t_{end}} O(D,t_d) + \frac{t_{end}-t_d}{t_{end}} O^*(t_d),$$
 
-\noindent where $O*(t_d)$ is the value of the objective function for a the
+\noindent where $O^*(t_d)$ is the value of the objective function for the
 deployment history that is optimum for a disruption at time $t_d$.  For a
 discrete set of disruption times identified in Eqn \ref{eqn:Happrox}, each
 $O^*(t_d)$ can be evaluated once \textit{a priori}.  Each subsequent
 approximation of $S^*(D,t_d)$ requires only a single evaluation of the
-objective function.
+objective function, $O(D)$.
 
 
 \subsubsection{Problem Definition}
@@ -441,7 +446,8 @@ realistic scenarios, including a policy decision to shift away from breeders
 and towards burners.
 
 It is also necessary to introduce a probability distribution for the when the
-disruption occurs.  In this case, a gamma distribution is chosen:
+disruption occurs.  In this case, a gamma distribution is chosen, and shown in
+Figure \ref{fig:exp3-gamma-dist}.
 
 \begin{equation}
     p(t_d) = \frac{600}{\Gamma(1.5)\cdot 2^{1.5}} \left(\frac{t}{600}\right)^{0.5} \mathlarger{e^{\frac{\mathlarger{\mathsmaller{-}t}}{600 \cdot 2}}}
@@ -465,26 +471,26 @@ disruption occurs.  In this case, a gamma distribution is chosen:
 
 This problem was used to demonsrate the hedging strategy analysis.
 Intermediate results were used to assess the impact of the assumptions
-inherent in this analysis and are presented in \citeprod{rwc-dissertation}.  To
-assess the quality of the best hedging deployment history identified by this
-methodology, it is useful to compare its performance to other possible
-deployment histories.  In addition to comparing the value of $H(D)$ for
-different deployment histories, it is valuable to consider the probability
-distribution functions (PDFs) of objective function values, over a large set
-of randomly sampled disruption times.
+inherent in this analysis and are analyzed more comprehensively in
+Ref. x\citeprod{rwc-dissertation}.  To assess the quality of the best hedging
+deployment history identified by this methodology, it is useful to compare its
+performance to other possible deployment histories.  In addition to comparing
+the value of $H(D)$ for different deployment histories, it is valuable to
+consider the probability distribution functions (PDFs) of objective function
+values, over a large set of randomly sampled disruption times.
 
 
 Figure \ref{fig:exp3-outcome-dists} shows the PDFs for the hedging strategy
 compared to 6 other deployment histories, specifically the best deployment
 strategies for 6 different fixed/known disruption times.  It is apparent that
 a number of deployment histories have lower objective function values in their
-best case, that the best case for the hedging strategy, but may also have a
+best case than the best case for the hedging strategy, but may also have a
 higher prevelance of higher objective function values.
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=1.0\columnwidth]{dists.eps}
-    \caption[Experiment 3: Outcome Distributions]{
+    \caption[Outcome Distributions in Hedging Analysis]{
         The best deployment schedules from select disruption times and the
         hedging schedule were used in to sample disruption times from the PDF.
         Best achievable objectives were then collected and the outcome

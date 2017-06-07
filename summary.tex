@@ -31,7 +31,7 @@ different material flow solutions may vary, such variations do not always
 represent substantially different flows.
 
 The specific task of introducing objective function callbacks to allow
-suppliers to detremine what preference each consumer will assess for its
+suppliers to determine what preference each consumer will assess for its
 offers, and therefore tailor the offers to maximize the likelihood of
 matching.  This feature both adds efficiency to the market mechanisms by
 improving the quality of individual offers and/or reducing the total number of
@@ -40,9 +40,10 @@ offers necessary to reach an optimal solution.
 The single deviation from the orignial research plan was that realistic
 economic value functions were not implemented in place of preference.  While
 it is possible for each facility archetype to rely on realistic economic
-values to assess its preference for individual trades, insufficient certainty
-in economic models exists to justify incorporating this in specific facility
-archetypes being delivered formally as part of the \Cyclus{} ecosystem.
+values to assess its preference for individual trades in the current
+implementation of \Cyclus{}, insufficient certainty in economic models exists
+to justify incorporating this in specific facility archetypes being delivered
+formally as part of the standard software.
 
 \subsection{System-level Optimization}
 
@@ -68,7 +69,7 @@ One contribution beyond the original research plan was to use this
 optimization system to compare the impacts of different modeling choices,
 namely the difference between modeling indviidual facilities and fleets of
 facilities, and the difference between 1 month and 3 month time
-steps. \citeprod{rwc_fleet}
+steps\citeprod{rwc_fleet}.
 
 One substantinal contribution beyond the original research plan was the
 adaptation of the optimization system for identifying hedging strategies in

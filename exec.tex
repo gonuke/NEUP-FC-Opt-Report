@@ -6,4 +6,52 @@
 %%    of benefit to the public. The discussion should be a minimum of one
 %%    paragraph and written in terms understandable by an educated layman.
 
+Alternatives nuclear cycles offer a number of possible advantages over the
+current once-through fuel cycle, but there are lingering uncertainties in how
+to assess those advantages and unclear transition paths to arrive at those
+alternatives.  The field of nuclear fuel cycle simulation provides tools for
+investigating these transitions, studying their technical challenges and
+identifying their broad societal benefits.  Most fuel cycle simulation relies
+on the analyst to propose a specific deployment plan for different
+technologies in the future, and then use the simulation tools to measure the
+consequences.  Any attempt to optimize has generally relied on manual
+iteration to revise the deployment plan and reassess the transition.
+
+This work seeks to introduce automated optimization into fuel cycle
+simulation, specifically using the \Cyclus{} fuel cycle simulation platform.
+At the system-level, this consists of implementing an optimization driver that
+can automatically assess the performance of a single deployment plan and adapt
+it to seek a better alternative.  In addition to identifying a preferred
+optimization algorithm, some consideration must also be given to the structure
+of the decision space and the formulation of the objective function.  While
+there is too much uncertainty in many nuclear fuel cycle performance metrics
+for a complete single objective function to be defined, it is possible to
+define some useful functions.
+
+In order to support the flexibility of \Cyclus{} in responding to the needs of
+system-level optimization, a form of optimization must also be introduced at
+the market-level.  Individual facilities trade in nuclear materials using a
+market paradigm in which requests for material are matched with offers of
+material.  The consumers of material have the freedom to determine the best
+offers based on algorithms that meet their individual needs, whether physics,
+economics or otherwise.  Such a market mechanism allows each facility to
+respond freely, and possibly with nuance and richness, to perturbations
+introduced to the simulation by the system-level optimization process.  This
+mechanism also preserves the ability for individual facility models to operate
+without any special knowledge of the internal state or decisions of other
+facilities.  Their only interaction is in the form of requests and offers.
+
+Although the consumers retain the agency to make the final preference
+decisions, it is important for the supplier to have some input to those
+decisions.  It is also valuable for suppliers to have a mechanism to assess
+how any given offer will be received by the potential consumers.  Tailored
+offers will help maximize the performance of the market as a whole.  Both of
+these capabilities have been introduced as part of the otherwise
+consumer-centeric market model.
+
+Finally, the system-level optimization has been extended to perform nested
+optimization under postulated disruptions to the deployment plan, thus
+identifying deployment strategies that hedge against the impact of those
+disruptions.
+
 

@@ -20,9 +20,9 @@ the following.
 flexibility in \Cyclus, each agent must operate as a \textit{black box}, with
 no assumed knowledge of the capabilities or current state of other agents.
 This permits individual facilities to be represented by plugins that can be
-swapped individually without imposing restrictions on other agents in the
-system.  The market clearing mechanism must be able to accept any request for
-resources, regardless of its ability to be satisfied by the system.
+swapped without imposing restrictions on other agents in the system.  The
+market clearing mechanism must be able to accept any request for resources,
+regardless of its ability to be satisfied by the system.
 
 \vspace{1em}
 \noindent\textbf{Fungibility}: Since different fissile nuclides can fill
@@ -41,20 +41,20 @@ transactions.
 \vspace{1em}
 
 A market clearing mechanism that satisfies these high level requirements,
-known as the \gls{DRE}, was designed and implemented.  \ref{subsection:dre}
+known as the \gls{DRE}, was designed and implemented.  Section \ref{subsection:dre}
 first discusses the conceptual design of the \gls{DRE}, followed by a formal
 definition of this system as a mixed-integer linear program to solve a
 modified network flow problem.  Different solvers were studied to assess the
 trade-off between accuracy and efficiency.  A number of sample problems are
 presented to demonstrate the capability of the \gls{DRE}.  A more
-comprehensive treatment of the \gls{DRE} can be found in \citeprod{dre_paper}
+comprehensive treatment of the \gls{DRE} can be found in Refs. \citeprod{dre_paper}
 and \citeprod{gidden_thesis}.  Although the \gls{DRE} provides the necessary
 components for market clearing in \Cyclus, it does not lead to the most
 computationally efficient results.  In particular, the \gls{DRE} does not
 provide a mechanism for suppliers to tailor their offers to the specific
 interests of the consumers, even if their behavior models would allow them to
-do so.  \ref{subsection:callback} introduces just such a mechanism, also
-allowing suppliers to ascribe differening values to different offers for use
+do so.  Section \ref{subsection:callback} introduces just such a mechanism, also
+allowing suppliers to ascribe differing values to different offers for use
 in resolving the \gls{DRE}.
 
 \subsection{Dynamic Resource Exchange}\label{subsection:dre}
@@ -72,18 +72,18 @@ cycle at each time step in a \Cyclus simulation:
   quality.
 \item Consumers use their own valuation process to rank the offers using the
   notion of preference.
-\item All preferences are collected to be solved by a system that maximizes
+\item All preferences are collected to be solved by an algorithm that maximizes
   the total preference in the system.
 \item The solution identifies specific resource trades that are then carried
   out among the facilities/agents.
 \end{enumerate}
 
-A the heart of the \gls{DRE} is a the \gls{MTP} \citeref{even1975complexity}
+At the heart of the \gls{DRE} is a the \gls{MTP} \citeref{even1975complexity}
 which belongs to the network flow family of optimization problems. A network
-flow problem is represented by a graph, $G(N, A)$, comprises nodes $N$ and
+flow problem is represented by a graph, $G(N, A)$, that comprises nodes $N$ and
 arcs $A$. If flow can occur between some node $i$ and some other node $j$,
 then it flows along arc $(i, j)$. Given a graph instance, optimal flow between
-nodes can be found provided \textit{objective coefficients} and
+nodes can be found subject to \textit{objective coefficients} and
 \textit{constraints}. \textit{Decision variables} for this optimization
 problem comprise the optimal \textit{flow assignment}. If all decision
 variables are linear, then the resulting formulation is termed a \gls{LP}. If
@@ -105,14 +105,6 @@ application of this enhanced complexity deals with data networks. Multiple
 classifications of data exist, but they all must traverse the same network
 infrastructure. Accordingly, the infrastructure can only accommodate a certain
 quantity of total flow among all communication types.
-
-A number of adjustments are made to a canonical MTP to accommodate specific
-features of a nuclear fuel cycle, transforming it into a so-called
-\gls{NFCTP}.
-
-\begin{enumerate}
-\item 
-\end{enumerate}
 
 \subsubsection{Mathematical Formulation}
 
@@ -156,8 +148,10 @@ coupling in Equation \ref{eqs:MCTP_cap}.
 %%% 
 
 
-A number of specific modifications can be made to accommodate specific
-features of the nuclear fuel cycle, including:
+A number of adjustments are made to a canonical MTP to accommodate specific
+features of a nuclear fuel cycle, transforming it into a so-called
+\gls{NFCTP}:
+
 \begin{itemize}
 \item portfolios of requests, $R$, and offers, $S$, that represent the
   fungibility of resources,
@@ -171,7 +165,7 @@ features of the nuclear fuel cycle, including:
 \end{itemize}
 This allows the \gls{MTP} to be redefined into a more problem specific
 \gls{NFCTP} as shown in Equation \ref{eqs:NFCTP}.  A more detailed discussion
-of these details is available in ref \citeprod{dre_paper}.
+of these details is available in Ref. \citeprod{dre_paper}.
 
 \begin{subequations}\label{eqs:NFCTP}
   \begin{align}
@@ -279,10 +273,10 @@ simulations.  In these cases, large numbers of distinct realizations were
 performed to study the mean behavior of the \gls{DRE}.
 
 A sample of the results in shown in Figure \ref{fig:solver_comparison}.  This
-problem has many reactors, each requesting fresh fuel for period reloads.  In
-the reference case, the reactors are requesting invidivual assemblies rather
-than batches of assemblies and trade preferences are adjusted based on a model
-for relative facility location that allows for fine adjustment.  Three
+problem has many reactors, each requesting fresh fuel for periodic reloads.
+In the reference case, the reactors are requesting invidivual assemblies
+rather than batches of assemblies and trade preferences are adjusted based on
+a model for relative facility location that allows for fine adjustment.  Three
 different fuel cycle configurations were tested. In each case, the x-axis
 shows the deviaiton in the achieved value of the objective function being
 optimized by the \gls{DRE} while the y-axis shows the deviation in simulation
@@ -300,7 +294,7 @@ offered in Ref. \citeprod{gidden_thesis}.
 A number of computational experiments are conducted to highlight unique
 features enabled by the \gls{DRE} in Cyclus. Each experiment is performed by
 solving instances of the \gls{DRE} using both the greedy heuristic solver and
-to optimality with the branch-and-bound solver \gls{COIN-OR} Cbc solver. A
+optimality with the branch-and-bound solver \gls{COIN-OR} Cbc solver. A
 UOX-MOX one-pass recycle system with all required fuel cycle facilities is
 taken as the base case scenario in order to reduce the complexity of the fuel
 cycle and highlight departures from available simulators. For simplicity of
@@ -309,7 +303,7 @@ commodity rather than a combination of fuel types as is done in practice. A
 simulation time frame of 50 years is chosen with one-month time-steps
 (totaling 600 simulation time steps), sufficient to display all relevant
 effects. The nominal parameters of all common facilities in the simulation are
-shown in \citeprod{dre_paper}.
+shown in Ref. \citeprod{dre_paper}.
 
 The base case scenario is not process constrained (i.e., it is constrained only
 by the dynamics of Pu availability in the recycling stream). Reactors are
@@ -317,7 +311,7 @@ allowed to be fueled by either UOX or MOX, with a preference for MOX over UOX,
 and refuel one-third of their total core mass every 18 months. Spent UOX fuel is
 allowed to be recycled, whereas spent MOX fuel is sent directly to a
 repository. In order to involve dynamism in the simulation, the population
-reactors grows linearly over time at a rate of 1 reactor every 5 years. An
+of reactors grows linearly over time at a rate of 1 reactor every 5 years. An
 initial population of 20 reactors are deployed individually in each of the first
 20 time-steps of the simulation as shown in Figure \ref{fig:deploy}. Note that
 deployments are staggered in the initial period in order to avoid supply/demand
@@ -350,13 +344,13 @@ clustering effect. A diagram of the full base case fuel cycle is shown in Figure
 Three perturbations from the base case scenario are used to provide examples of
 modeling capability enabled through the use of the DRE. The scenarios are
 summarized in Table \ref{scenarios} below and described in more detail in the
-following sections. 
+Ref. \citeprod{dre_paper}.
 
 \begin{table}[]
 \centering
-\caption{Short Descriptions of Scenarios Ran}
+\caption{Short Descriptions of Scenarios}
 \label{scenarios}
-\begin{tabularx}{\textwidth}{|p{1.5cm}|p{1.5cm}|X|X|}
+\begin{tabularx}{\textwidth}{|p{2cm}|p{2cm}|X|X|}
 \hline
 \textbf{Scenario  Name} & \textbf{Scenario Handle} & \textbf{Primary Departure from Base Case}                & \textbf{Capability Highlighted}                             \\ \hline
 Separations Outage      & outage                   & Separations facility halts operation mid-simulation      & System flexibility to recycling facilities operation        \\ \hline
@@ -377,9 +371,10 @@ ability of agents to change their preference assignment algorithm dynamically
 within the simulation.  In this case, it also engages the \gls{RIF} hierarchy
 built into \Cyclus{} that allows for facilities to be owned by an
 \textit{institution} that operates in a geopolitical \textit{region}, each of
-which can influence how preferences are determined.  In this case, a second
-region is added and a tariff is imposed on trade between the regions at $150
-\leq t \leq 300$.
+which can influence how preferences are
+determined\citeprod{cyclus_fundamentals}.  In this case, a second region is
+added and a tariff is imposed on trade between the regions at $150 \leq t \leq
+300$.
 
 Importantly, in all cases, the only changes necessary to perturb the system
 are local to the facility experiencing the perturbation.  All other
@@ -446,13 +441,13 @@ disruptions.  Three major types of remedy exist:
 
 The first of these was ruled out because of the burden it would place of the
 \gls{DRE} optimization algorithms.  Suppliers with continuously varying
-paramter spaces might need to issue 1 or 2 orders of magnitude more offers for
+parameter spaces might need to issue 1 or 2 orders of magnitude more offers for
 each request in order to ensure that they were well-matched to the consumers
 preference.  Since the performance of the \gls{DRE} scales with the number of
 request-offer pairs, this would increase the time to resolve the market even
-though the number of material flows wuold not change.
+though the number of material flows would not change.
 
-The second of these was ruled out because of the burden it would violate the
+The second of these was ruled out because it would violate the
 \Cyclus{} principle that each agent should operate as a black box to ensure
 flexibility.  As each new piece of information is added to the request, all
 agents would need to implement algorithms that could use that information to
@@ -475,7 +470,7 @@ ability to establish preference, the supplier is free to use any algorithm to
 establish this preference.
 
 The objective function callbacks have also been implemented, simply by
-extending the contents of a request to include a pointer to a fcuntion with a
+extending the contents of a request to include a pointer to a function with a
 single argument of a single bid, and extending the interface with a function
 that will return that pointer.  Suppliers are free to query the callback
 function (or not) and implement any algorithm to use that information to amend
@@ -483,7 +478,7 @@ their bids.
 
 Both of these changes require no changes to existing agent archetypes, unless
 they want to take advantage of the new functionality.  A default bid
-prefreence of 0 is assigned for all bids where it is not assigned explicitly,
+preference of 0 is assigned for all bids where it is not assigned explicitly,
 so that all methods to generate bids will continue to function with no
 changes.  Similarly, the callback functions are only queried if a supplier
 archetype chooses to do so.
@@ -493,7 +488,7 @@ archetype chooses to do so.
 
 
 This capability was demonstrated with a storage facility archetype that
-determined its preference based in the specific decay heat of the offered
+determined its preference based on the specific decay heat of the offered
 resource.  When added to the simulation, the archetype was configured with a
 maximum specific decay heat and will never accept a material with a specific
 decay heat above that threshold.  In addition, it will prefer materials with a
@@ -530,3 +525,10 @@ receiving facility for each possible offer, it can avoid making offers that
 are not going to be accepted by the receiving facility.
 
  
+\subsection{Summary}
+
+The implementation of the \gls{DRE} satisfied the goals of allowing for a
+flexible market mechanism to match requests for resources with offers for
+resources.  A detailed study of different solution algorithms was
+completed\citeprod{gidden_thesis} and the flexibility was demonstrated on a
+series of specific problems\citeprod{dre_paper}.

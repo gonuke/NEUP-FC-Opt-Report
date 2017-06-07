@@ -1,7 +1,7 @@
 
 \section{Introduction}
 
-The goal of this project was to introduce optimization capabilities into the
+The goal of this project is to introduce optimization capabilities into the
 \Cyclus{} fuel cycle simulator at two different levels of the simulation
 capability.  
 
@@ -22,14 +22,14 @@ A \Cyclus{} simulation consists of a deployment plan for a series of
 facilities, possibly over many decades, with each facility represented by a
 particular behavior model.  Each facility has a set of commodities that it
 consumes and/or supplies, and a market for each commodity exists to facilitate
-the trade of those commodities.  Commodities are traded in discrete quanta,
+their exchange.  Commodities are traded in discrete quanta,
 each of which has a specific quantitiy (often measured in mass) and a specific
 quality (e.g. isotopic composition).  At each time step, consumers issue
 requests for resources while suppliers issue offers of resources. A market
 model uses some mechanism to determine which requests will be matched with
 which offers, and resources are exchanged among facilites.  A more complete
 description of the \Cyclus{} platform, including some of the work described
-here, can be found in \citeprod{cyclus_fundamentals}.
+here, can be found in Ref. \citeprod{cyclus_fundamentals}.
 
 \subsection{Optimization Needs}
 
@@ -44,7 +44,7 @@ did not allow for different agents to value the same discrete quantum of
 material differently.  Market-level optimization was implemented in the form
 of the \gls{DRE} with the primary purpose of supporting agent-based valuation
 of indvidual resource bids, accounting for flexibility in the behavior of the
-facility and fungibility among isotopes within a particular commodity.  As
+facility, and fungibility among isotopes within a particular commodity.  As
 will be seen, this encapsulation of the resource bid valuation entirely within
 each agent promotes the fundamental flexibility of \Cyclus.
 
@@ -56,8 +56,8 @@ request for resources to also include a mechanism for suppliers to query the
 consumers for the value of a particular offer, so-called objective function
 callbacks.  One original aim that proved unrealistic was the introduction of
 realistic economic value functions in the context of these callback functions.
-The ability to define the value of an resource offer in purely economic terms
-is an appealing notion.  However, the remains too much uncertainty in the
+The ability to define the value of a resource offer in purely economic terms
+is an appealing notion.  However, there remains too much uncertainty in the
 various components of the costs of most fuel cycle facilities and processes to
 provide credible estimates of the economic value of any single resource offer.
 As will be discussed, the implementation of the objective function callbacks
@@ -65,7 +65,7 @@ does not preclude the introduction of purely economic valuation, but none were
 explicitly provided as part of this work.
 
 The second target of optimization is at the level of an entire simulation.  A
-single \Cyclus simulation can simulate the deployment, interaction and
+single \Cyclus instance can simulate the deployment, interaction and
 decommissioning of a set of facilities over time, and provide metrics for the
 performance of those facilities as well as for the overall fuel cycle.  It is
 frequently interesting, however, to find a particular set of deployment,
@@ -75,17 +75,17 @@ an agent-based simulation, stochastic optimization techniques are the best
 choice.  A swarm-based algorithm was implemented and demonstrated on
 representative nuclear fuel cycle transition scenarios.  This same algorithm
 was then also used to explore the limitations of different modeling paradigms
-in achieving the same optimum solution.  Finally, a nested optimization was
-carried out to identify best hedging scenarios given some the likelihood of
-disruption in the fuel cycle during transition.
+in achieving the same optimum solution\citeprod{rwc_fleet}.  Finally, a nested
+optimization was carried out to identify best hedging scenarios given the
+likelihood of disruption in the fuel cycle during transition.
 
-While economic valuation of individual resource offers at the market level
-there is also interest in determining an economic/financial metric for the
-performance of an entire fuel cycle, particularly during transition.  Such a
-metric would permit system-level optimization that focused entirely/primarily
-on the economic performance over time.  Some work was done to consider the
-economic metrics for complete nuclear fuel cycles, particularly during
-transition.
+While economic valuation of individual resource offers at the market level was
+not implemented, there is also interest in determining an economic/financial
+metric for the performance of an entire fuel cycle, particularly during
+transition.  Such a metric would permit system-level optimization that focused
+entirely/primarily on the economic performance over time.  Some work was done
+to consider the economic metrics for complete nuclear fuel cycles,
+particularly during transition.
 
 \subsection{About this Report}
 
@@ -93,6 +93,5 @@ This report documents the implementation, testing, characterization and
 demonstration of each of these features.  Section \ref{section:market}
 describes the \gls{DRE} and the addition of objective function callbacks.
 Section \ref{section:system} describes the fundamental optimization capability
-and two advanced demonstrations of its use in fuel cycle simulations.  A brief
-summary of the work on economic objective functions is also provided.
+and two advanced demonstrations of its use in fuel cycle simulations.  
 
