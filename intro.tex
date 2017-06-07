@@ -23,11 +23,11 @@ facilities, possibly over many decades, with each facility represented by a
 particular behavior model.  Each facility has a set of commodities that it
 consumes and/or supplies, and a market for each commodity exists to facilitate
 their exchange.  Commodities are traded in discrete quanta,
-each of which has a specific quantitiy (often measured in mass) and a specific
+each of which has a specific quantity (often measured in mass) and a specific
 quality (e.g. isotopic composition).  At each time step, consumers issue
 requests for resources while suppliers issue offers of resources. A market
 model uses some mechanism to determine which requests will be matched with
-which offers, and resources are exchanged among facilites.  A more complete
+which offers, and resources are exchanged among facilities.  A more complete
 description of the \Cyclus{} platform, including some of the work described
 here, can be found in Ref. \citeprod{cyclus_fundamentals}.
 
@@ -43,7 +43,7 @@ trades would take place.  While this did allow for market like behavior, it
 did not allow for different agents to value the same discrete quantum of
 material differently.  Market-level optimization was implemented in the form
 of the \gls{DRE} with the primary purpose of supporting agent-based valuation
-of indvidual resource bids, accounting for flexibility in the behavior of the
+of individual resource bids, accounting for flexibility in the behavior of the
 facility, and fungibility among isotopes within a particular commodity.  As
 will be seen, this encapsulation of the resource bid valuation entirely within
 each agent promotes the fundamental flexibility of \Cyclus.
@@ -51,7 +51,7 @@ each agent promotes the fundamental flexibility of \Cyclus.
 By itself, the consumer-centric \gls{DRE} left one gap in the efficient
 implementation of commodity markets: suppliers had no knowledge of how the
 consumers would value their bids and therefore no ability to customize their
-bids to the consumer.  This was rememdied by extending the contents of a
+bids to the consumer.  This was remedied by extending the contents of a
 request for resources to also include a mechanism for suppliers to query the
 consumers for the value of a particular offer, so-called objective function
 callbacks.  One original aim that proved unrealistic was the introduction of

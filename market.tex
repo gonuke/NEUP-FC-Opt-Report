@@ -28,7 +28,7 @@ regardless of its ability to be satisfied by the system.
 \noindent\textbf{Fungibility}: Since different fissile nuclides can fill
 similar roles in the fuel cycle, resource offers may differ in composition but
 still satisfy the needs of the consumer.  The market clearing mechanism must
-be able to accept any offer of resources, without judgement on whether or not
+be able to accept any offer of resources, without judgment on whether or not
 it meets the goals of the corresponding request.
 
 \vspace{1em}
@@ -36,7 +36,7 @@ it meets the goals of the corresponding request.
 ability to determine the details of a specific request, a specific offer, or
 which offer is the most suitable match to a specific request must rest solely
 in the hands of the facilities making those requests and offers.  The market
-clearing mechanism may not impose any problem-wide value judgement on the
+clearing mechanism may not impose any problem-wide value judgment on the
 transactions.
 \vspace{1em}
 
@@ -156,7 +156,7 @@ features of a nuclear fuel cycle, transforming it into a so-called
 \item portfolios of requests, $R$, and offers, $S$, that represent the
   fungibility of resources,
 \item partitioning of the graph into individual commodities,
-\item multiple constraints, $k \in K_{\{s,r\}}$, on indivdiual suppliers or consumers,
+\item multiple constraints, $k \in K_{\{s,r\}}$, on individual suppliers or consumers,
 \item constraints that depend on the quality of the individual trade (e.g. SWU
   constraints), $a_{i,j}^k$, and
 \item mutually exclusive requests, $\tilde{x_j}$, that must be fulfilled by a
@@ -233,12 +233,12 @@ of these details is available in Ref. \citeprod{dre_paper}.
 With the introduction of mutually exclusive requests, this problem becomes a
 \gls{MILP}, requiring more complex methods for a rigorous solution.
 
-Another important feature of the \gls{NFCTP} is the introductoin of false
+Another important feature of the \gls{NFCTP} is the introduction of false
 consumers and suppliers to ensure a feasible solution.  If the total requests
 of any single commodity exceed the supply, the network flow problem will match
 one consumer with the false supplier, and vice versa.  No resources are traded
 along such arcs.  Instead, consumers matched with false suppliers simple
-receive no response to their request during that itme step.
+receive no response to their request during that time step.
 
 \subsubsection{Solution Engines}
 
@@ -263,7 +263,7 @@ optimal solution, by using a heuristic of matching the highest preference
 request with its highest preference bid, and so on until everything is
 matched, including matches with false consumers/suppliers.  These different
 solvers were tested to develop an understanding of their behavior in a number
-of configurations.\citeprod{gidden_thesis} In addition to the overal computational
+of configurations.\citeprod{gidden_thesis} In addition to the overall computational
 performance of the different solvers, there was also interest in understanding
 under what circumstances the solvers achieved similar solutions.  These
 results were measured as a function of the total number of requests and/or
@@ -274,11 +274,11 @@ performed to study the mean behavior of the \gls{DRE}.
 
 A sample of the results in shown in Figure \ref{fig:solver_comparison}.  This
 problem has many reactors, each requesting fresh fuel for periodic reloads.
-In the reference case, the reactors are requesting invidivual assemblies
+In the reference case, the reactors are requesting individual assemblies
 rather than batches of assemblies and trade preferences are adjusted based on
 a model for relative facility location that allows for fine adjustment.  Three
 different fuel cycle configurations were tested. In each case, the x-axis
-shows the deviaiton in the achieved value of the objective function being
+shows the deviation in the achieved value of the objective function being
 optimized by the \gls{DRE} while the y-axis shows the deviation in simulation
 time.  The greedy solver is generally much faster, but does not achieve the
 same level of optimization.  It is noteworthy, however, that the difference in
@@ -292,9 +292,9 @@ offered in Ref. \citeprod{gidden_thesis}.
 \subsubsection{Demonstration Problems}
 
 A number of computational experiments are conducted to highlight unique
-features enabled by the \gls{DRE} in Cyclus. Each experiment is performed by
+features enabled by the \gls{DRE} in \Cyclus{}. Each experiment is performed by
 solving instances of the \gls{DRE} using both the greedy heuristic solver and
-optimality with the branch-and-bound solver \gls{COIN-OR} Cbc solver. A
+optimally with the branch-and-bound solver \gls{COIN-OR} Cbc solver. A
 UOX-MOX one-pass recycle system with all required fuel cycle facilities is
 taken as the base case scenario in order to reduce the complexity of the fuel
 cycle and highlight departures from available simulators. For simplicity of
@@ -425,7 +425,7 @@ Ref \citeprod{dre_paper}.
 As previously discussed, the basic implementation of the \gls{DRE} provides
 the ability for consumers to evaluate different resource offers, but does not
 provide the suppliers with any mechanism to judge how well those offers will
-be recieved.  For suppliers that are unable to match the request exactly, but
+be received.  For suppliers that are unable to match the request exactly, but
 otherwise have flexibility in the quantity and/or quality of the offers that
 they issue, this leaves them essentially guessing which offers will be best
 received by the consumer.  If the suppliers offers are poor matches, the

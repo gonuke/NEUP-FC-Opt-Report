@@ -173,7 +173,7 @@ here rely on a large number of independent evaluations of the objective
 function.  After the optimization algorithm selects the set of decision
 variables for each evaluation, an objective function evaluation consists of a
 \Cyclus{} simulation followed by some post-processing of the results.
-Depending on the algorithm there were $O(200)$ evalutions per iteration, with
+Depending on the algorithm there were $O(200)$ evaluations per iteration, with
 $O(300)$ iterations, for a total of $O(60,000)$ evaluations.  
 
 The optimization system for \Cyclus{} was developed using a master-worker
@@ -181,7 +181,7 @@ paradigm in a high-throughput computing environment.  For each iteration, the
 optimization algorithm ``master'' would assign work, in the form of a
 \Cyclus{} input file, to a set of independent ``workers'', each of which would
 run \Cyclus{} and evaluate the objective function based on the output.  Such a
-system is flexible to the number of available workers at any time, and mutiple
+system is flexible to the number of available workers at any time, and multiple
 masters can share the same pool of workers.  Such a system allowed a thorough
 exploration of the different algorithms, with over 700,000 \Cyclus{}
 evaluations used for the final comparison.  Development and testing relied on
@@ -194,7 +194,7 @@ A variety of open source libraries, each implementing algorithms in one or
 more of the classes of optimization algorithms, were tested for their
 performance using the reference problem described above.
 
-The overhead and time involved in dispatching and running Cyclus simulations
+The overhead and time involved in dispatching and running \Cyclus{} simulations
 is much larger than the time and computational resources required to run the
 each optimizer itself. Because of this, the optimizers are compared by
 primarily looking at the best objective function value achieved as a function
@@ -356,7 +356,7 @@ a disruption.  Such a transition may not be optimal in the event that no
 disruption occurs, but can have the highest likelihood of a near optimal
 performance under the presumption of disruption.  The optimization system for
 \Cyclus{} can be nested to identify such transitions, known as hedging
-strategies since they hedge agains the risk of disruptions.
+strategies since they hedge against the risk of disruptions.
 
 \subsubsection{Methodology}
 
@@ -368,7 +368,7 @@ such an optimization problem must be slightly different.  First, consider a
 candidate deployment history, $D$, that will be subject to a disruption. All
 histories must start on this path as they have no \textit{a priori} knowledge
 if or when a disruption will occur.  After the introduction of a disruption at
-time, $t_d$, an optimization anlaysis can occur to find the optimal deployment
+time, $t_d$, an optimization analysis can occur to find the optimal deployment
 history, $D'$, that must only differ from $D$ in the time period after the
 disruption.  That is, the decision space for this optimization problem does
 not include the decisions made prior to $t_d$.  We define $R^*(D,t_d)$ as the
@@ -389,7 +389,7 @@ $$H(D) \equiv \int_0^\infty S^*(D,t_d) \cdot p(t_d) dt_d,$$
   H(D) \approx \sum_{i=0}^m S^*(D,t_i) \cdot p(t_i) \Delta t. \label{eqn:Happrox}
 \end{equation}
 
-Finally, this can be used as an objective function itself, to seak the initial
+Finally, this can be used as an objective function itself, to seek the initial
 deployment strategy, $D$, that results in the optimum value of $H(D)$.
 
 
@@ -441,7 +441,7 @@ In this case, $C_{t,tot}$ is the total installed capacity; the lower the capacit
 
 In order to focus on the methodology, a simple disruption was introduced in
 the form of a 33\% reduction in the Pu available for fabrication of \gls{SFR}
-fuel.  This could be interpretted as an approximation to a number of different
+fuel.  This could be interpreted as an approximation to a number of different
 realistic scenarios, including a policy decision to shift away from breeders
 and towards burners.
 
@@ -469,7 +469,7 @@ Figure \ref{fig:exp3-gamma-dist}.
 
 \subsubsection{Results}
 
-This problem was used to demonsrate the hedging strategy analysis.
+This problem was used to demonstrate the hedging strategy analysis.
 Intermediate results were used to assess the impact of the assumptions
 inherent in this analysis and are analyzed more comprehensively in
 Ref. x\citeprod{rwc-dissertation}.  To assess the quality of the best hedging
@@ -485,7 +485,7 @@ compared to 6 other deployment histories, specifically the best deployment
 strategies for 6 different fixed/known disruption times.  It is apparent that
 a number of deployment histories have lower objective function values in their
 best case than the best case for the hedging strategy, but may also have a
-higher prevelance of higher objective function values.
+higher prevalence of higher objective function values.
 
 \begin{figure}[!htb]
     \centering
@@ -512,8 +512,8 @@ possible to extend it to a nested optimization system by changing the
 mechanism for evaluating the objective function.  In a typical scenario
 optimization, a single objective function evaluation is a single \Cyclus{}
 simulation with some post processing.  For the hedging analysis, using an
-approxiation at one layer of the nested optimization, a single objective
+approximation at one layer of the nested optimization, a single objective
 function evaluation is $O(10)$ \Cyclus simulations that are combined into a
-single value.  This methodology was demonstrated using a poisitted disruption
+single value.  This methodology was demonstrated using a posited disruption
 to the EG23 transition scenario, identifying a the best deployment history for
 minimizing the exposure to that disruption.
