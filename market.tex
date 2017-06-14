@@ -287,7 +287,20 @@ in the flows achieved by this solution.  Very similar flows may have different
 objective function values.  A richer and more comprehensive analysis is
 offered in Ref. \citeprod{gidden_thesis}.
 
-%% include Gidden PhD figure 4.33 \label{fig:solver_comparison}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=.7\textwidth]{1k_compare_front_pref_flow.pdf}
+    \caption{
+      \label{fig:solver_comparison}
+      A comparison of simulation-objective values and solution times between
+      instances solved with Greedy and CBC solvers. Reference values are
+      comprised of high-fidelity reactor instances solved with CBC. Each other
+      combination of fundamental parameter and solvers are then compared against
+      the reference. Note that the once-through fuel cycle pane does not include
+      other CBC solvers, because their solution times were very long.
+    }
+  \end{center}
+\end{figure}
 
 \subsubsection{Demonstration Problems}
 
